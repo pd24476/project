@@ -31,7 +31,7 @@ PCOS.DATA <- PCOS.DATA %>%
 # creating new variables----
 PCOS.DATA <- mutate(PCOS.DATA, bmi= weight_kg/(height_cm/100)^2)
 hormones <- select(PCOS.DATA,c(lh_m_iu_m_l,tsh_m_iu_l,amh_ng_m_l,prg_ng_m_l,prl_ng_m_l))
-symptoms <- select(PCOS.DATA,c(weight_gain_y_n,hair_growth_y_n,pimples_y_n,fast_food_y_n,reg_exercise_y_n))
+symptoms <- select(PCOS.DATA,c(weight_gain_y_n,hair_growth_y_n,pimples_y_n,skin_darkening_y_n,hair_loss_y_n,fast_food_y_n,reg_exercise_y_n))
 PCOS.DATA <- mutate(PCOS.DATA,
                     case_def = case_when(pcos_y_n == "1" | amh_ng_m_l >=10 ~ "Confirmed case",
                                          rbs_mg_dl >= 120 | tsh_m_iu_l >= 2.5 ~ "Suspect case",
@@ -49,20 +49,17 @@ hormone_level <- ifelse(hormones$lh_m_iu_m_l > 10, "High",
 PCOS.DATA$case_def <- replace(PCOS.DATA$case_def, is.na(PCOS.DATA$case_def), "To investigate")
 
 #plot the data----
-# create a stacked bar plot
-bar_plot <- ggplot(PCOS.DATA, aes(x = case_def, y =bmi, fill = hormone_level)) +
-  geom_bar(stat = "identity",position = "dodge") +
-  labs(x = "Cases", y = "bmi", fill = "LH hormone") +
-  theme_minimal()
+# create a stacked box plot
+box_plot <- ggplot(PCOS.DATA, aes(x= age_cat, y= amh_ng_m_l, fill= amh_ng_m_l, color= age_cat))
+       box_plot +
+       geom_boxplot() +
+       geom_jitter(width = 0.2, height = 0, alpha = 0.5,color = "steelblue")
+       theme_classic()
+       
 
- # box_plot <- ggplot(PCOS.DATA, aes(x= age_cat, y= hormones$amh_ng_m_l, fill= patient_file_no, color= age_cat))
- #       box_plot +
- #       geom_boxplot() +
- #       geom_jitter(width = 0.2, height = 0, alpha = 0.5,color = "steelblue")
- #       theme_classic()
- # 
- # 
- # 
+
+
+
 
 
 
